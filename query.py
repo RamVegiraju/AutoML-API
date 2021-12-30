@@ -10,6 +10,14 @@ from sklearn import metrics
 
 class autoML:
     def __init__(self, data_path, target_column, model_type, metric_type):
+        """Sample AutoML API that deals with regression problems.
+
+        Args:
+            data_path (str): Location of your sample dataset.
+            target_column (str): Column you are trying to predict.
+            model_type (str): Options are linear_regression and random_forest.
+            metric_type (str): Options are MAE and RMSE.
+        """
         self.data_path = data_path
         self.target_column = target_column
         self.model_type = model_type
@@ -20,6 +28,7 @@ class autoML:
         self.y_test = None
         self.RMSE = None
         self.MAE = None
+        self.metrics = None
 
 
     def preprocess(self):
@@ -50,8 +59,10 @@ class autoML:
             RMSE = np.sqrt(metrics.mean_squared_error(self.y_test, Y_Pred))
 
         elif self.model_type == "random_forest":
+            #Model Creation
             regressor = RandomForestRegressor(n_estimators=40) 
-            regressor.fit(self.X_train, self.y_train) 
+            regressor.fit(self.X_train, self.y_train)
+            #Model prediction
             Y_Pred = regressor.predict(self.X_test)
             MAE = metrics.mean_absolute_error(self.y_test, Y_Pred) 
             RMSE = np.sqrt(metrics.mean_squared_error(self.y_test, Y_Pred))
@@ -78,7 +89,7 @@ class autoML:
 
 
 if __name__ == '__main__':
-    auto_model = autoML("petrol.csv", "Petrol_Consumption", "random_forest", "RMSE")
+    auto_model = autoML("petrol.csv", "Petrol_Consumption", "linear_regression", "MAE")
     auto_model.preprocess()
     auto_model.train()
     print(auto_model.evaluate())
